@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Signup</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <header class="header">
+    <img src="/images/logo.png" alt="Logo" onerror="this.src='https://dummyimage.com/80x80/1b244d/ffffff&text=LOGO'">
+    <div class="brand">Certifyकरो</div>
+    <nav style="margin-left:auto">
+      <a href="/index.html">Home</a>
+      <a href="/catalog.html">Catalog</a>
+      <a href="/dashboard.html">Dashboard</a>
+      <a href="/admin.html">Admin</a>
+      <a href="/instructor.html">Instructor</a>
+    </nav>
+    <div id="authArea" style="margin-left:16px"></div>
+  </header>
+
+  <div class="container">
+    <div class="grid" style="grid-template-columns:1.1fr .9fr;align-items:stretch">
+      <div class="card">
+        <h2>Create your demo account</h2>
+        <p class="small">In this demo, your account is created the first time you sign in with an email.</p>
+        <a class="btn" href="/login.html">Go to Login</a>
+      </div>
+      <div class="card">
+        <h3>Tips</h3>
+        <ul class="small">
+          <li><code>user@admin.com</code> → Admin role</li>
+          <li><code>user@instructor.com</code> → Instructor role</li>
+          <li>Any other email → Student role</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">© 2025 Online Course Certification • Prototype</footer>
+  <script src="/js/app.js"></script>
+  <script src="/js/auth.js"></script>
+</body>
+</html>

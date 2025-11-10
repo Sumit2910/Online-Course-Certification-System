@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Custom Certificate Designer</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <header class="header">
+    <img src="/images/logo.png" alt="Logo" onerror="this.src='https://dummyimage.com/80x80/1b244d/ffffff&text=LOGO'">
+    <div class="brand">Certifyकरो</div>
+    <nav style="margin-left:auto">
+      <a href="/index.html">Home</a>
+      <a href="/catalog.html">Catalog</a>
+      <a href="/dashboard.html">Dashboard</a>
+      <a href="/admin.html">Admin</a>
+    </nav>
+    <div id="authArea" style="margin-left:16px"></div>
+  </header>
+
+  <div class="container">
+    <h2>Create a Custom Certificate</h2>
+    <div class="grid" style="grid-template-columns:1fr 1fr">
+      <div class="card">
+        <h3>Details</h3>
+        <div class="field">
+          <label>Recipient Name</label>
+          <input class="input" id="rName" placeholder="e.g., Ayesha Sharma">
+        </div>
+        <div class="field">
+          <label>Title (Course/Event)</label>
+          <input class="input" id="cTitle" placeholder="e.g., TechFest 2025 – Volunteer">
+        </div>
+        <div class="field">
+          <label>Date</label>
+          <input class="input" id="cDate" type="date">
+        </div>
+        <div class="field">
+          <label>Issuer/Organization</label>
+          <input class="input" id="cIssuer" placeholder="e.g., Dept. of CSE">
+        </div>
+        <div class="field">
+          <label>Design</label>
+          <select id="design" class="input">
+            <option value="simple">Simple</option>
+            <option value="classic">Classic</option>
+            <option value="modern">Modern</option>
+          </select>
+        </div>
+        <div class="grid" style="grid-template-columns:1fr 1fr;gap:10px">
+          <button class="btn" onclick="preview()">Preview</button>
+          <button class="btn secondary" onclick="saveAndIssue()">Save & Issue</button>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Preview</h3>
+        <div id="preview" class="card" style="background:#0b1020"></div>
+        <div id="issued" style="display:none;margin-top:16px">
+          <div class="card">
+            <h3>Certificate Issued</h3>
+            <div id="certCanvasCustom" style="margin:12px auto;padding:30px;max-width:900px;background:white;color:#111;border-radius:12px;border:1px solid #ddd">
+              <div id="certCanvasCustomInner"></div>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-top:16px">
+                <div style="font-size:12px">Certificate ID: <span id="cidCustomInline"></span></div>
+                <div id="qrcodeCustomCanvas"></div>
+              </div>
+            </div>
+            <p><strong>ID:</strong> <span id="cid"></span></p>
+            <div id="qrcode"></div>
+            <a class="btn" id="verifyLink" href="#">Open Verification Page</a> <button class="btn secondary" onclick="downloadCustomPNG()">Download PNG</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <footer class="footer">© 2025 Online Course Certification • Prototype</footer>
+  <script>
+  window.REQUIRE_AUTH = true;
+</script>
+<script src="/js/guard.js"></script>
+  <script src="/js/app.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="/js/designer.js"></script>
+</body>
+</html>

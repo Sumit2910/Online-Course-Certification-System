@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Certificate</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <header class="header">
+    <img src="/images/logo.png" alt="Logo" onerror="this.src='https://dummyimage.com/80x80/1b244d/ffffff&text=LOGO'">
+    <div class="brand">Certifyकरो</div>
+    <nav style="margin-left:auto">
+      <a href="/index.html">Home</a>
+      <a href="/catalog.html">Catalog</a>
+      <a href="/dashboard.html">Dashboard</a>
+      <a href="/admin.html">Admin</a>
+    </nav>
+    <div id="authArea" style="margin-left:16px"></div>
+  </header>
+  <div class="container">
+    
+<h2>Certificate</h2>
+<div class="card">
+  <p class="small">Generate a certificate once your progress reaches 100% in the course.</p>
+  <button class="btn" onclick="tryGenerate()">Generate Certificate</button>
+</div>
+<div id="certCard" class="card" style="display:none;margin-top:16px">
+  <h3>Certificate Created</h3>
+  <div id="certCanvas" style="margin:12px auto;padding:30px;max-width:900px;background:white;color:#111;border-radius:12px;border:1px solid #ddd">
+    <div id="certCanvasInner"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:16px">
+      <div style="font-size:12px">Certificate ID: <span id="cidInline"></span></div>
+      <div id="qrcodeCanvas"></div>
+    </div>
+  </div>
+  <p><strong>ID:</strong> <span id="certId"></span></p>
+  <div id="qrcode"></div>
+  <a class="btn" id="verifyLink" href="#">Open Verification Page</a> <button class="btn secondary" id="dlBtn" onclick="downloadCertPNG()">Download PNG</button>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+  </div>
+  <footer class="footer">© 2025 Online Course Certification • Prototype</footer>
+  <script>
+  window.REQUIRE_AUTH = true;
+</script>
+<script src="/js/guard.js"></script>
+  <script src="/js/app.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="/js/auth.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="/js/certificates.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Login</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <header class="header">
+    <img src="/images/logo.png" alt="Logo" onerror="this.src='https://dummyimage.com/80x80/1b244d/ffffff&text=LOGO'">
+    <div class="brand">Certifyकरो</div>
+    <nav style="margin-left:auto">
+      <a href="/index.html">Home</a>
+      <a href="/catalog.html">Catalog</a>
+      <a href="/dashboard.html">Dashboard</a>
+      <a href="/admin.html">Admin</a>
+      <a href="/instructor.html">Instructor</a>
+    </nav>
+    <div id="authArea" style="margin-left:16px"></div>
+  </header>
+
+  <div class="container">
+    <div class="grid" style="grid-template-columns:1.1fr .9fr;align-items:stretch">
+      <!-- Left: brand/description -->
+      <div class="card" style="display:flex;flex-direction:column;justify-content:center;gap:14px">
+        <div class="kicker">Welcome back</div>
+        <h1 class="title">Sign in to continue</h1>
+        <p class="subtitle">Access the course catalog, track progress, submit assessments, and generate verifiable certificates.</p>
+        <div class="grid cards" style="grid-template-columns:repeat(2,1fr)">
+          <div class="card">
+            <h3>Admin access</h3>
+            <p class="small"><code>user@admin.com</code> → Admin dashboard</p>
+          </div>
+          <div class="card">
+            <h3>Instructor access</h3>
+            <p class="small"><code>user@instructor.com</code> → Instructor dashboard</p>
+          </div>
+        </div>
+        <img src="https://dummyimage.com/900x320/121936/5b8cff&text=Learning+Portal" style="width:100%;border-radius:18px;border:1px solid #1a2146">
+      </div>
+
+      <!-- Right: form -->
+      <div class="card">
+        <h3>Demo Sign In</h3>
+        <div class="field">
+          <label>Email</label>
+          <input class="input" id="email" placeholder="you@example.com">
+        </div>
+        <div class="field">
+          <label>Password</label>
+          <input class="input" id="password" type="password" placeholder="(any password for demo)">
+        </div>
+        <button class="btn" id="signInBtn" >Sign In</button>
+        <p class="small" style="margin-top:10px">Don’t have an account? <a href="/signup.html">Create one</a></p>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">© 2025 Online Course Certification • Prototype</footer>
+  <script src="/js/app.js"></script>
+  <script src="/js/auth.js"></script>
+
+  <script>
+    // Attach login handlers
+    (function loginAttach(){
+      const email = document.getElementById('email');
+      const pass = document.getElementById('password');
+      const btn = document.getElementById('signInBtn');
+      function go(){
+        if(!email.value.trim()){ alert("Enter email"); email.focus(); return; }
+        loginDemo(email.value, pass.value);
+      }
+      if(btn) btn.addEventListener('click', go);
+      [email, pass].forEach(i => i && i.addEventListener('keypress', e => {
+        if(e.key === 'Enter'){ e.preventDefault(); go(); }
+      }));
+    })();
+  </script>
+</body>
+</html>
