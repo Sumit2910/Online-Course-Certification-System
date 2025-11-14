@@ -7,16 +7,28 @@
   <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
+<script>window.NO_SESSION_ON_THIS_PAGE = true;</script>
   <header class="header">
-    <img src="/images/logo.png" alt="Logo" onerror="this.src='https://dummyimage.com/80x80/1b244d/ffffff&text=LOGO'">
-    <div class="brand">Certifyकरो</div>
-    <nav style="margin-left:auto">
+    <div class="header-left">
+      <a href="/index.html" class="brand-wrap">
+        <img src="/images/logo.png" alt="Certifyकरो Logo"
+             onerror="this.src='https://dummyimage.com/40x40/1b244d/ffffff&text=C'">
+        <span class="brand">Certifyकरो</span>
+      </a>
+    </div>
+
+    <button class="nav-toggle" aria-label="Toggle navigation">
+      <span></span><span></span><span></span>
+    </button>
+
+    <nav class="main-nav" id="mainNav">
       <a href="/index.html">Home</a>
       <a href="/catalog.html">Catalog</a>
       <a href="/dashboard.html">Dashboard</a>
-      <a href="/admin.html">Admin</a>
+      <a href="/certificate.html">Certificates</a>
     </nav>
-    <div id="authArea" style="margin-left:16px"></div>
+
+    <div id="authArea" class="auth-area"></div>
   </header>
   <div class="container">
     
@@ -40,5 +52,8 @@
   <script src="/js/app.js"></script>
   <script src="/js/auth.js"></script>
   
+
+<script src="/js/app.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/app.js"></script>
 </body>
-</html>

@@ -1,3 +1,4 @@
+
 // ===== GLOBAL API BASE (Render Backend) =====
 const API_BASE = "https://online-course-certification-system.onrender.com";
 
@@ -64,3 +65,13 @@ window.updateNav = function () {
     <button class="btn" type="button" onclick="logoutDemo()">Logout</button>
   `;
 };
+
+
+// Mobile nav toggle
+document.addEventListener("DOMContentLoaded", () => {
+  const toggle = document.querySelector(".nav-toggle");
+  if (!toggle) return;
+  toggle.addEventListener("click", () => {
+    document.body.classList.toggle("nav-open");
+  });
+});

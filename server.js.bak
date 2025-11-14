@@ -28,13 +28,6 @@ app.use((req, res, next) => {
 const dbFile = path.join(__dirname, "occ.db");
 const db = new sqlite3.Database(dbFile);
 
-const FALLBACK_MODULES = {
-  \"1\":[{id:1,title:'Intro - Overview',duration:'20 min'},{id:2,title:'Basics',duration:'30 min'},{id:3,title:'Advanced',duration:'40 min'},{id:4,title:'Wrap-up',duration:'20 min'}],
-  \"2\":[{id:1,title:'DS Intro',duration:'20 min'},{id:2,title:'Linear DS',duration:'30 min'},{id:3,title:'Non-linear',duration:'40 min'},{id:4,title:'Practice',duration:'30 min'}],
-  \"3\":[{id:1,title:'HTML',duration:'30 min'},{id:2,title:'CSS',duration:'40 min'},{id:3,title:'JS',duration:'45 min'},{id:4,title:'Project',duration:'60 min'}],
-  \"_default\":[{id:1,title:'Module 1',duration:'20 min'},{id:2,title:'Module 2',duration:'30 min'},{id:3,title:'Module 3',duration:'40 min'}]
-};
-
 db.serialize(() => {
   db.run(`
     CREATE TABLE IF NOT EXISTS users (
@@ -179,13 +172,11 @@ app.get("/api/courses", (req, res) => {
 });
 
 app.get("/api/courses/:id", (req, res) => {
-
   db.get(
     "SELECT * FROM courses WHERE id=?",
     [req.params.id],
     (err, row) => {
-      if (!row) return res.status(404).json({ error: "Course not found" 
-});
+      if (!row) return res.status(404).json({ error: "Course not found" });
       res.json(row);
     }
   );
@@ -320,7 +311,4 @@ app.get("/", (req, res) => {
 });
 
 // ---- START SERVER ----
-// START SERVER
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Backend running on port ${PORT}`);
-});
+app.listen(PORT, "0.0.0.0", ()

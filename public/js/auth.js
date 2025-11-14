@@ -1,3 +1,8 @@
+
+// ---------------------------------------
+// /public/js/auth.js  (FINAL, FIXED)
+// ---------------------------------------
+
 // Demo login accounts:
 //   user@admin.com        → admin
 //   user@instructor.com   → instructor

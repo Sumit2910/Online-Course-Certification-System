@@ -1,12 +1,15 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Admin / Instructor</title>
   <link rel="stylesheet" href="/css/styles.css">
 </head>
+
 <body>
+
   <header class="header">
     <img src="/images/logo.png" alt="Logo" onerror="this.src='https://dummyimage.com/80x80/1b244d/ffffff&text=LOGO'">
     <div class="brand">Certifyकरो</div>
@@ -18,74 +21,76 @@
     </nav>
     <div id="authArea" style="margin-left:16px"></div>
   </header>
+  
   <div class="container">
-    
-<h2>Admin / Instructor</h2>
-<div class="grid" style="grid-template-columns:1fr 1fr">
-  <div class="card">
-    <h3>Create Course</h3>
-    <div class="field"><label>Title</label><input id="ctitle" class="input"></div>
-    <div class="field"><label>Category</label><input id="ccat" class="input"></div>
-    <div class="field"><label>Instructor</label><input id="cinst" class="input"></div>
-    <div class="field"><label>Duration (hrs)</label><input id="cdur" class="input" type="number" min="1"></div>
-    <div class="field"><label>Description</label><input id="cdesc" class="input"></div>
-    <div class="field"><label>Total Modules</label><input id="cmods" class="input" type="number" min="1" value="8"></div>
-    <button class="btn" onclick="createCourse()">Create</button>
-  </div>
-  <div class="card">
-    <h3>Recent Enrollments</h3>
-    <div id="enrollMount"></div>
-  </div>
-</div>
-<div class="card" style="margin-top:16px">
-  <h3>Release Grade</h3>
-  <div class="grid" style="grid-template-columns:1fr 1fr 1fr">
-    <div class="field"><label>User ID</label><input id="guser" class="input"></div>
-    <div class="field"><label>Course ID</label><input id="gcourse" class="input" type="number"></div>
-    <button class="btn" onclick="releaseGrade()">Release</button>
-  </div>
-</div>
-<script>
-  async function createCourse(){
-    const payload = {
-      title: qs('#ctitle').value,
-      category: qs('#ccat').value,
-      instructor: qs('#cinst').value,
-      duration: Number(qs('#cdur').value||0),
-      description: qs('#cdesc').value,
-      total_modules: Number(qs('#cmods').value||8),
-    };
-    const res = await API.post('/api/courses', payload);
-    if (res && res.id) alert('Course created with ID '+res.id);
-  }
+    <h2>Admin / Instructor</h2>
+    <div class="grid" style="grid-template-columns:1fr 1fr">
+      <div class="card">
+        <h3>Create Course</h3>
+        <div class="field"><label>Title</label><input id="ctitle" class="input"></div>
+        <div class="field"><label>Category</label><input id="ccat" class="input"></div>
+        <div class="field"><label>Instructor</label><input id="cinst" class="input"></div>
+        <div class="field"><label>Duration (hrs)</label><input id="cdur" class="input" type="number" min="1"></div>
+        <div class="field"><label>Description</label><input id="cdesc" class="input"></div>
+        <div class="field"><label>Total Modules</label><input id="cmods" class="input" type="number" min="1" value="8">
+        </div>
+        <button class="btn" onclick="createCourse()">Create</button>
+      </div>
+      <div class="card">
+        <h3>Recent Enrollments</h3>
+        <div id="enrollMount"></div>
+      </div>
+    </div>
+    <div class="card" style="margin-top:16px">
+      <h3>Release Grade</h3>
+      <div class="grid" style="grid-template-columns:1fr 1fr 1fr">
+        <div class="field"><label>User ID</label><input id="guser" class="input"></div>
+        <div class="field"><label>Course ID</label><input id="gcourse" class="input" type="number"></div>
+        <button class="btn" onclick="releaseGrade()">Release</button>
+      </div>
+    </div>
+    <script>
+      async function createCourse() {
+        const payload = {
+          title: qs('#ctitle').value,
+          category: qs('#ccat').value,
+          instructor: qs('#cinst').value,
+          duration: Number(qs('#cdur').value || 0),
+          description: qs('#cdesc').value,
+          total_modules: Number(qs('#cmods').value || 8),
+        };
+        const res = await API.post('/api/courses', payload);
+        if (res && res.id) alert('Course created with ID ' + res.id);
+      }
 
-  async function loadEnrolls(){
-    const data = await API.get('/api/admin/enrollments');
-    const mount = qs('#enrollMount');
-    mount.innerHTML = '<table class="table"><thead><tr><th>User</th><th>Course</th><th>Title</th><th>When</th></tr></thead><tbody>' +
-      data.map(r=> `<tr><td>${r.user_id}</td><td>${r.course_id}</td><td>${r.title}</td><td>${new Date(r.created_at).toLocaleString()}</td></tr>`).join('')
-      + '</tbody></table>';
-  }
+      async function loadEnrolls() {
+        const data = await API.get('/api/admin/enrollments');
+        const mount = qs('#enrollMount');
+        mount.innerHTML = '<table class="table"><thead><tr><th>User</th><th>Course</th><th>Title</th><th>When</th></tr></thead><tbody>' +
+          data.map(r => `<tr><td>${r.user_id}</td><td>${r.course_id}</td><td>${r.title}</td><td>${new Date(r.created_at).toLocaleString()}</td></tr>`).join('')
+          + '</tbody></table>';
+      }
 
-  async function releaseGrade(){
-    const user_id = qs('#guser').value;
-    const course_id = Number(qs('#gcourse').value||0);
-    const res = await API.post('/api/grades/release', { user_id, course_id });
-    alert(res.ok ? 'Released' : 'Failed');
-  }
+      async function releaseGrade() {
+        const user_id = qs('#guser').value;
+        const course_id = Number(qs('#gcourse').value || 0);
+        const res = await API.post('/api/grades/release', { user_id, course_id });
+        alert(res.ok ? 'Released' : 'Failed');
+      }
 
-  document.addEventListener('DOMContentLoaded', loadEnrolls);
-</script>
+      document.addEventListener('DOMContentLoaded', loadEnrolls);
+    </script>
 
   </div>
   <footer class="footer">© 2025 Online Course Certification • Prototype</footer>
   <script>
-  window.REQUIRE_AUTH = true;
-  window.REQUIRED_ROLE = "admin";
-</script>
-<script src="/js/guard.js"></script>
+    window.REQUIRE_AUTH = true;
+    window.REQUIRED_ROLE = "admin";
+  </script>
+  <script src="/js/guard.js"></script>
   <script src="/js/app.js"></script>
   <script src="/js/auth.js"></script>
-  
+
 </body>
+
 </html>

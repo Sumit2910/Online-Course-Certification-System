@@ -1,4 +1,6 @@
 
+// /public/js/module_viewer.js - patched
+
 function getParam(p) {
   return new URLSearchParams(location.search).get(p);
 }
@@ -20,7 +22,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     modData = [];
   }
 
-  const current = modData.find(m => m.id == moduleId);
+  const current = modData.find(m => String(m.id) == String(moduleId));
 
   // Safely fill UI
   qs("#modTitle").textContent = current?.title || "Module";
