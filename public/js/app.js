@@ -1,3 +1,6 @@
+// ===== GLOBAL API BASE (Render Backend) =====
+const API_BASE = "https://online-course-certification-system.onrender.com";
+
 // public/js/app.js
 // Small helpers + header nav + global loader
 
