@@ -8,8 +8,7 @@
 
 window.userId = null;
 window.userRole = "student";
-// Change this to your real Render URL once deployed
-const API_BASE = "https://your-app.onrender.com";  // TODO: put your Render URL here
+const API_BASE = "https://online-course-certification-system.onrender.com";  
 
 const API = {
   get: (url, opts = {}) =>
