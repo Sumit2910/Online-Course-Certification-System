@@ -8,7 +8,7 @@
 
 window.userId = null;
 window.userRole = "student";
-const API_BASE = "https://online-course-certification-system.onrender.com";  
+const API_BASE = "https://online-course-certification-system.onrender.com";
 
 const API = {
   get: (url, opts = {}) =>

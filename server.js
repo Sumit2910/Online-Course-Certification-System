@@ -24,10 +24,16 @@ app.use((req, res, next) => {
 // Static
 app.use(express.static(path.join(__dirname, "public"), { index: false }));
 
-// Root -> login
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
+// Only serve frontend files for frontend routes:
+app.get(["/", "/index.html", "/login.html", "/dashboard.html", "/catalog.html", "/course.html", "/module.html", "/certificate.html"], (req, res) => {
+  res.sendFile(path.join(__dirname, "public", req.path));
 });
+
+// Show 404 for unknown API routes
+app.use("/api", (req, res) => {
+  res.status(404).json({ error: "API endpoint not found" });
+});
+
 
 // --- DB Setup ---
 const dbFile = path.join(__dirname, "occ.db");
