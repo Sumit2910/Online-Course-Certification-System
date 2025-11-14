@@ -1,90 +1,83 @@
-
-// Clerk front-end auth bootstrap
-// Insert your publishable key below. For local demo without real Clerk,
-// you can set DEMO_MODE = true to bypass (NOT FOR PRODUCTION).
-
-const DEMO_MODE = true; // set to false when you add a real Clerk key
-window.DEMO_MODE = DEMO_MODE;
-const CLERK_PUBLISHABLE_KEY = "YOUR_CLERK_PUBLISHABLE_KEY";
+// public/js/auth.js
+// Rules:
+// - user@admin.com       -> admin
+// - user@instructor.com  -> instructor
+// - anything else        -> student
 
 window.userId = null;
 window.userRole = "student";
 
-async function initAuth(){
-  if (DEMO_MODE) {
-    // lightweight demo flow
-    const fake = localStorage.getItem("demo_user_id") || `user_${Math.random().toString(36).slice(2,8)}`;
-    localStorage.setItem("demo_user_id", fake);
-    window.userId = fake;
-    // Fetch role
-    const me = await API.get("/api/users/me");
-    if (me && me.role) window.userRole = me.role;
-    updateNav();
-    return;
-  }
+const API = {
+  get: (url, opts={}) => fetch(url, { ...opts, headers: { ...(opts.headers||{}), "Content-Type":"application/json", "x-user-id": window.userId||"" } }).then(r=>r.json()),
+  post: (url, data={}, opts={}) => fetch(url, { method:"POST", body: JSON.stringify(data), headers: { ...(opts.headers||{}), "Content-Type":"application/json", "x-user-id": window.userId||"" } }).then(r=>r.json()),
+};
 
-  const clerkJs = document.createElement("script");
-  clerkJs.setAttribute("data-clerk-publishable-key", CLERK_PUBLISHABLE_KEY);
-  clerkJs.src = "https://cdn.jsdelivr.net/npm/@clerk/clerk-js@latest/dist/clerk.browser.js";
-  document.head.appendChild(clerkJs);
+function qs(sel){ return document.querySelector(sel); }
 
-  clerkJs.addEventListener("load", async () => {
-    await window.Clerk.load();
-    if (window.Clerk.user) {
-      window.userId = window.Clerk.user.id;
-      const me = await API.get("/api/users/me");
-      if (me && me.role) window.userRole = me.role;
-    }
-    updateNav();
-  });
+function roleFromEmail(email){
+  const e = (String(email||"").trim().toLowerCase());
+  if (e === "user@admin.com") return "admin";
+  if (e === "user@instructor.com") return "instructor";
+  return "student";
 }
 
-function updateNav(){
-  const authArea = document.getElementById("authArea");
-  if (!authArea) return;
-  if (window.userId) {
-    authArea.innerHTML = `
-      <span class="small">Signed in as <strong>${window.userId}</strong> (${window.userRole})</span>
-      <a class="btn ghost" href="/dashboard.html">Dashboard</a>
-      ${window.userRole==='admin'?'<a class="btn ghost" href="/admin.html">Admin</a>':''}
-      ${window.userRole==='instructor'?'<a class="btn ghost" href="/instructor.html">Instructor</a>':''}
-      <a class="btn ghost" href="/profile.html">Profile</a>
-      <button class="btn" onclick="logoutDemo()">Logout</button>
-    `;
-  } else {
-    authArea.innerHTML = `<a class="btn" href="/login.html">Login</a>`;
-  }
+function defaultHome(role){
+  if (role === 'admin') return '/admin.html';
+  if (role === 'instructor') return '/instructor.html';
+  return '/dashboard.html';
 }
-
-async function setRole(role){
-  const res = await API.post("/api/users/role", { role });
-  if (res && res.ok) {
-    window.userRole = role;
-    updateNav();
-    alert("Role saved: " + role);
-  }
-}
-
-document.addEventListener("DOMContentLoaded", initAuth);
 
 window.loginDemo = async function(email, password){
-  const role = (String(email||'').trim().toLowerCase()==='user@admin.com')?'admin':
-               (String(email||'').trim().toLowerCase()==='user@instructor.com')?'instructor':'student';
-  const uid = String(email||'').trim().toLowerCase();
-  window.userId = uid; window.userRole = role;
-  localStorage.setItem('demo_user_id', uid);
-  localStorage.setItem('demo_user_role', role);
-  try { await API.post('/api/users/role', { role }); } catch (e) {}
-  updateNav && updateNav();
-  let target = localStorage.getItem('redirect_after_login');
-  if (target) { localStorage.removeItem('redirect_after_login'); location.href = target; return; }
-  location.href = role==='admin'?'/admin.html':role==='instructor'?'/instructor.html':'/dashboard.html';
+  const uid = String(email || "").trim().toLowerCase();
+  if (!uid) { alert("Enter an email"); return; }
+  const role = roleFromEmail(uid);
+  // Save to session (localStorage)
+  window.userId = uid;
+  window.userRole = role;
+  localStorage.setItem("demo_user_id", uid);
+  localStorage.setItem("demo_user_role", role);
+
+  // Persist role server-side (best-effort)
+  try { await API.post("/api/users/role", { role }); } catch(e) { console.warn("role save failed", e); }
+
+  // Update header
+  if (typeof updateNav === "function") updateNav();
+
+  // If there was a pending protected page saved, use it only if allowed for this role
+  let pending = localStorage.getItem("redirect_after_login");
+  if (pending) {
+    localStorage.removeItem("redirect_after_login");
+    // If pending requires a specific role, check it
+    if (pending.includes("/admin.html") && role !== "admin") return location.href = defaultHome(role);
+    if (pending.includes("/instructor.html") && role !== "instructor") return location.href = defaultHome(role);
+    return location.href = pending;
+  }
+
+  // Otherwise go to default home for role
+  location.href = defaultHome(role);
 };
 
 window.logoutDemo = function(){
-  localStorage.removeItem('demo_user_id');
-  localStorage.removeItem('demo_user_role');
-  window.userId = null; window.userRole = 'student';
-  updateNav && updateNav();
-  location.href = '/login.html';
+  localStorage.removeItem("demo_user_id");
+  localStorage.removeItem("demo_user_role");
+  window.userId = null;
+  window.userRole = "student";
+  if (typeof updateNav === "function") updateNav();
+  location.href = "/index.html"; // keep visitor on homepage after logout
 };
+
+// initAuth: only RESTORE session if present; do NOT create random user
+function initAuth(){
+  const uid = localStorage.getItem("demo_user_id");
+  const role = localStorage.getItem("demo_user_role");
+  if (uid) {
+    window.userId = uid;
+    window.userRole = role || "student";
+  } else {
+    window.userId = null;
+    window.userRole = "student";
+  }
+  if (typeof updateNav === "function") updateNav();
+}
+
+document.addEventListener("DOMContentLoaded", initAuth);

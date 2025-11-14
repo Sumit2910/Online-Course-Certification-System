@@ -4,8 +4,11 @@
   "private": true,
   "description": "Prototype: Online Course Certification System (role-based, catalog, enrollments, progress, assessments, grades, certificate & verification)",
   "main": "server.js",
+  "engines": { "node": "20.x" },   
   "scripts": {
     "start": "node server.js",
+    "build": "npm rebuild sqlite3 --build-from-source", 
+    "render-build": "npm ci && npm run build" ,
     "dev": "nodemon server.js"
   },
   "dependencies": {

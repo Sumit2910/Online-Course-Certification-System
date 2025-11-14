@@ -30,10 +30,24 @@ async function loadCatalog(){
 }
 
 async function enroll(course_id){
+  // If user not signed in -> save intent and redirect to login
+  if (!window.userId) {
+    // save desired redirect to come back and auto-enroll or show course
+    localStorage.setItem("redirect_after_login", "/course.html?id=" + course_id);
+    // redirect to login page
+    location.href = "/login.html";
+    return;
+  }
+
   const res = await API.post("/api/enroll", { course_id });
-  if (res.ok) alert("Enrolled! Check Dashboard notifications.");
-  else alert(res.error || "Failed");
+  if (res.ok) {
+    alert("Enrolled! Check Dashboard notifications.");
+    // optionally refresh UI
+  } else {
+    alert(res.error || "Failed to enroll");
+  }
 }
+
 
 document.addEventListener("DOMContentLoaded", () => {
   qsa("input,select").forEach(i=> i.addEventListener("change", loadCatalog));
