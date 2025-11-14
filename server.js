@@ -34,6 +34,15 @@ const dbFile = path.join(__dirname, "occ.db");
 const db = new sqlite3.Database(dbFile);
 
 db.serialize(() => {
+  db.run(`
+    CREATE TABLE IF NOT EXISTS module_progress (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      user_id TEXT,
+      course_id INTEGER,
+      module_id INTEGER,
+      completed INTEGER DEFAULT 0
+    )`);
+
   db.run(`CREATE TABLE IF NOT EXISTS users (
     user_id TEXT PRIMARY KEY,
     role TEXT DEFAULT 'student'
@@ -102,10 +111,10 @@ db.serialize(() => {
     if (row.c === 0) {
       const stmt = db.prepare(`INSERT INTO courses (title, category, instructor, duration, description, total_modules) VALUES (?,?,?,?,?,?)`);
       [
-        ["Intro to Java", "Programming", "Dr. Kapoor", 20, "Learn Java basics to OOP.", 8],
-        ["Data Structures", "CS Core", "Prof. Roy", 30, "Arrays, stacks, queues, trees, graphs.", 10],
-        ["Web Dev Fundamentals", "Web", "A. Sen", 25, "HTML, CSS, JavaScript, responsive UI.", 9],
-        ["AI for Beginners", "AI/ML", "Dr. Nandi", 15, "Foundations of AI and simple models.", 6]
+        ["Intro to Java", "Programming", "Dr. Kapoor", 20, "Learn Java basics to OOP.", 3],
+        ["Data Structures", "CS Core", "Prof. Roy", 30, "Arrays, stacks, queues, trees, graphs.", 3],
+        ["Web Dev Fundamentals", "Web", "A. Sen", 25, "HTML, CSS, JavaScript, responsive UI.", 3],
+        ["AI for Beginners", "AI/ML", "Dr. Nandi", 15, "Foundations of AI and simple models.", 3]
       ].forEach(c => stmt.run(c));
       stmt.finalize();
     }
@@ -197,11 +206,136 @@ app.post("/api/enroll", authUser, (req, res) => {
     });
 });
 
+// --- My Courses for Dashboard ---
+app.get("/api/my/courses", authUser, (req, res) => {
+  db.all(
+    `SELECT 
+       c.id,
+       c.title,
+       c.category,
+       c.instructor,
+       c.duration,
+       p.percent,
+       e.created_at
+     FROM enrollments e
+     JOIN courses c ON e.course_id = c.id
+     LEFT JOIN progress p ON p.user_id = e.user_id AND p.course_id = e.course_id
+     WHERE e.user_id = ?
+     ORDER BY e.created_at DESC`,
+    [req.userId],
+    (err, rows) => {
+      if (err) return res.status(500).json({ error: err.message });
+      res.json(rows);
+    }
+  );
+});
+
+
 app.get("/api/notifications", authUser, (req, res) => {
   db.all(`SELECT * FROM notifications WHERE user_id=? ORDER BY created_at DESC LIMIT 50`, [req.userId], (err, rows) => {
     if (err) return res.status(500).json({ error: err.message });
     res.json(rows);
   });
+});
+
+// Get progress for a course
+app.get("/api/progress/:courseId", (req, res) => {
+  const user = req.headers["x-user-id"];
+  const courseId = req.params.courseId;
+
+  if (!user) return res.json({ progress: [] });
+
+  db.all(
+    "SELECT module_id, completed FROM module_progress WHERE user_id=? AND course_id=?",
+    [user, courseId],
+    (err, rows) => {
+      if (err) return res.status(500).json({ error: err.message });
+      res.json({ progress: rows });
+    }
+  );
+});
+
+function recomputeCourseProgress(userId, courseId, cb) {
+  // 1) Get how many modules the course should have
+  db.get(
+    "SELECT total_modules FROM courses WHERE id=?",
+    [courseId],
+    (err, row) => {
+      if (err) return cb(err);
+
+      const total = row && row.total_modules ? row.total_modules : 1;
+
+      // 2) Count completed modules
+      db.get(
+        "SELECT COUNT(DISTINCT module_id) AS c FROM module_progress WHERE user_id=? AND course_id=? AND completed=1",
+        [userId, courseId],
+        (err2, row2) => {
+          if (err2) return cb(err2);
+
+          const completed = row2 && row2.c ? row2.c : 0;
+          const percent = Math.round((completed / total) * 100);
+
+          // 3) Upsert into progress table
+          db.run(
+            `INSERT INTO progress (user_id, course_id, completed_modules, percent)
+             VALUES (?,?,?,?)
+             ON CONFLICT(user_id, course_id)
+             DO UPDATE SET completed_modules=excluded.completed_modules, percent=excluded.percent`,
+            [userId, courseId, completed, percent],
+            (err3) => {
+              if (err3) return cb(err3);
+              cb(null, { completed, percent, total });
+            }
+          );
+        }
+      );
+    }
+  );
+}
+
+app.post("/api/module/complete", (req, res) => {
+  const { course_id, module_id } = req.body;
+  const user = req.headers["x-user-id"];
+
+  if (!user) {
+    return res.status(401).json({ ok: false, error: "Not logged in" });
+  }
+
+  db.get(
+    "SELECT id FROM module_progress WHERE user_id=? AND course_id=? AND module_id=?",
+    [user, course_id, module_id],
+    (err, row) => {
+      if (err) return res.status(500).json({ ok: false, error: err.message });
+
+      const finish = () => {
+        // After insert/update, recalc overall course progress
+        recomputeCourseProgress(user, course_id, (err3, stats) => {
+          if (err3) return res.status(500).json({ ok: false, error: err3.message });
+          res.json({ ok: true, progress: stats });
+        });
+      };
+
+      if (row) {
+        db.run(
+          "UPDATE module_progress SET completed=1 WHERE id=?",
+          [row.id],
+          (err2) => {
+            if (err2) return res.status(500).json({ ok: false, error: err2.message });
+            finish();
+          }
+        );
+      } else {
+        db.run(
+          "INSERT INTO module_progress (user_id, course_id, module_id, completed) VALUES (?,?,?,1)",
+          [user, course_id, module_id],
+          (err2) => {
+            if (err2) return res.status(500).json({ ok: false, error: err2.message });
+            finish();
+          }
+        );
+      }
+    }
+  );
 });
 
 // --- Progress ---

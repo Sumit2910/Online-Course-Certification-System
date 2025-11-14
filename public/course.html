@@ -22,21 +22,26 @@
     
 <div class="grid" style="grid-template-columns:1.2fr .8fr">
   <div class="card">
-    <div class="badge" id="meta"></div>
-    <h2 id="title">Course Title</h2>
-    <p id="desc" class="small"></p>
+    <div class="badge" id="courseMeta"></div>
+    <h2 id="courseTitle">Course Title</h2>
+    <p id="courseDesc" class="small"></p>
+
     <div class="field">
       <label>Progress: <span id="pLabel">0%</span></label>
       <div class="progress"><div></div></div>
     </div>
-    <div id="modules" class="grid" style="grid-template-columns:1fr 1fr"></div>
+
+    <h3 style="margin-top:16px">Modules</h3>
+    <div id="moduleList"></div>
   </div>
+
   <div class="card">
     <h3>Actions</h3>
     <a class="btn" id="assessBtn" href="#">Take Quiz / Submit Assignment</a>
     <a class="btn secondary" id="certBtn" href="#">Generate Certificate</a>
   </div>
 </div>
+
 <script>
   document.addEventListener("DOMContentLoaded", ()=>{
     const id = new URLSearchParams(location.search).get("id");

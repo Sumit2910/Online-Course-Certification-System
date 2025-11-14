@@ -29,24 +29,27 @@ async function loadCatalog(){
   `).join("");
 }
 
-async function enroll(course_id){
-  // If user not signed in -> save intent and redirect to login
+async function enroll(course_id) {
+  // If not logged in, remember where we wanted to go and redirect to login
   if (!window.userId) {
-    // save desired redirect to come back and auto-enroll or show course
     localStorage.setItem("redirect_after_login", "/course.html?id=" + course_id);
-    // redirect to login page
+    if (window.showLoader) window.showLoader();
     location.href = "/login.html";
     return;
   }
 
+  // Logged in: call backend
+  if (window.showLoader) window.showLoader();
   const res = await API.post("/api/enroll", { course_id });
-  if (res.ok) {
-    alert("Enrolled! Check Dashboard notifications.");
-    // optionally refresh UI
+  if (window.hideLoader) window.hideLoader();
+
+  if (res && res.ok) {
+    alert("Enrolled successfully! You can track progress in your dashboard.");
   } else {
-    alert(res.error || "Failed to enroll");
+    alert(res.error || "Failed to enroll.");
   }
 }
+
 
 
 document.addEventListener("DOMContentLoaded", () => {

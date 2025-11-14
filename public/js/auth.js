@@ -1,5 +1,7 @@
 // public/js/auth.js
-// Rules:
+// Demo-only email-based auth
+//
+// Roles:
 // - user@admin.com       -> admin
 // - user@instructor.com  -> instructor
 // - anything else        -> student
@@ -8,68 +10,107 @@ window.userId = null;
 window.userRole = "student";
 
 const API = {
-  get: (url, opts={}) => fetch(url, { ...opts, headers: { ...(opts.headers||{}), "Content-Type":"application/json", "x-user-id": window.userId||"" } }).then(r=>r.json()),
-  post: (url, data={}, opts={}) => fetch(url, { method:"POST", body: JSON.stringify(data), headers: { ...(opts.headers||{}), "Content-Type":"application/json", "x-user-id": window.userId||"" } }).then(r=>r.json()),
+  get: (url, opts = {}) =>
+    fetch(url, {
+      ...opts,
+      headers: {
+        ...(opts.headers || {}),
+        "Content-Type": "application/json",
+        "x-user-id": window.userId || ""
+      }
+    }).then(r => r.json()),
+  post: (url, data = {}, opts = {}) =>
+    fetch(url, {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: {
+        ...(opts.headers || {}),
+        "Content-Type": "application/json",
+        "x-user-id": window.userId || ""
+      }
+    }).then(r => r.json())
 };
 
-function qs(sel){ return document.querySelector(sel); }
-
-function roleFromEmail(email){
-  const e = (String(email||"").trim().toLowerCase());
+function roleFromEmail(email) {
+  const e = String(email || "").trim().toLowerCase();
   if (e === "user@admin.com") return "admin";
   if (e === "user@instructor.com") return "instructor";
   return "student";
 }
 
-function defaultHome(role){
-  if (role === 'admin') return '/admin.html';
-  if (role === 'instructor') return '/instructor.html';
-  return '/dashboard.html';
+function defaultHome(role) {
+  if (role === "admin") return "/admin.html";
+  if (role === "instructor") return "/instructor.html";
+  return "/dashboard.html";
 }
 
-window.loginDemo = async function(email, password){
+window.loginDemo = async function (email, password) {
   const uid = String(email || "").trim().toLowerCase();
-  if (!uid) { alert("Enter an email"); return; }
+  if (!uid) {
+    alert("Please enter an email");
+    return;
+  }
+
   const role = roleFromEmail(uid);
-  // Save to session (localStorage)
+
+  // Save session in memory + localStorage
   window.userId = uid;
   window.userRole = role;
   localStorage.setItem("demo_user_id", uid);
   localStorage.setItem("demo_user_role", role);
 
-  // Persist role server-side (best-effort)
-  try { await API.post("/api/users/role", { role }); } catch(e) { console.warn("role save failed", e); }
+  // Best-effort role save on server
+  try {
+    await API.post("/api/users/role", { role });
+  } catch (e) {
+    console.warn("role save failed", e);
+  }
 
-  // Update header
   if (typeof updateNav === "function") updateNav();
 
-  // If there was a pending protected page saved, use it only if allowed for this role
+  // Handle redirect-after-login logic
   let pending = localStorage.getItem("redirect_after_login");
   if (pending) {
     localStorage.removeItem("redirect_after_login");
-    // If pending requires a specific role, check it
-    if (pending.includes("/admin.html") && role !== "admin") return location.href = defaultHome(role);
-    if (pending.includes("/instructor.html") && role !== "instructor") return location.href = defaultHome(role);
-    return location.href = pending;
+    // protect role-specific pages
+    if (pending.includes("/admin.html") && role !== "admin") {
+      pending = defaultHome(role);
+    }
+    if (pending.includes("/instructor.html") && role !== "instructor") {
+      pending = defaultHome(role);
+    }
+    if (window.showLoader) window.showLoader();
+    location.href = pending;
+    return;
   }
 
-  // Otherwise go to default home for role
+  // Default redirect based on role
+  if (window.showLoader) window.showLoader();
   location.href = defaultHome(role);
 };
 
-window.logoutDemo = function(){
+window.logoutDemo = function () {
   localStorage.removeItem("demo_user_id");
   localStorage.removeItem("demo_user_role");
   window.userId = null;
   window.userRole = "student";
   if (typeof updateNav === "function") updateNav();
-  location.href = "/index.html"; // keep visitor on homepage after logout
+  if (window.showLoader) window.showLoader();
+  location.href = "/index.html";
 };
 
-// initAuth: only RESTORE session if present; do NOT create random user
-function initAuth(){
+function initAuth() {
+  // If this page wants to appear anonymous, ignore stored session
+  if (window.NO_SESSION_ON_THIS_PAGE) {
+    window.userId = null;
+    window.userRole = "student";
+    if (typeof updateNav === "function") updateNav();
+    return;
+  }
+
   const uid = localStorage.getItem("demo_user_id");
   const role = localStorage.getItem("demo_user_role");
+
   if (uid) {
     window.userId = uid;
     window.userRole = role || "student";

@@ -1,22 +1,63 @@
+// public/js/app.js
+// Small helpers + header nav + global loader
 
-// Common helpers
-const API = {
-  get: (url, opts={}) => fetch(url, { ...opts, headers: { ...(opts.headers||{}), "Content-Type":"application/json", "x-user-id": window.userId||"" } }).then(r=>r.json()),
-  post: (url, data={}, opts={}) => fetch(url, { method:"POST", body: JSON.stringify(data), headers: { ...(opts.headers||{}), "Content-Type":"application/json", "x-user-id": window.userId||"" } }).then(r=>r.json()),
+function qs(sel) { return document.querySelector(sel); }
+function qsa(sel) { return document.querySelectorAll(sel); }
+
+// Create loader overlay once
+document.addEventListener("DOMContentLoaded", () => {
+  if (!document.getElementById("pageLoader")) {
+    const overlay = document.createElement("div");
+    overlay.id = "pageLoader";
+    overlay.innerHTML = `<div class="spinner"></div>`;
+    document.body.appendChild(overlay);
+  }
+
+  // Mark internal link navigations with loader
+  qsa('a[href^="/"]').forEach(a => {
+    a.addEventListener("click", (e) => {
+      const href = a.getAttribute("href");
+      if (!href || href.startsWith("http")) return;
+      // let normal navigation happen, just show loader
+      if (window.showLoader) window.showLoader();
+    });
+  });
+
+  // Initial nav update if auth already restored
+  if (typeof updateNav === "function") updateNav();
+});
+
+// Loader helpers used everywhere
+window.showLoader = function () {
+  document.body.classList.add("loading");
 };
 
-function qs(sel){ return document.querySelector(sel); }
-function qsa(sel){ return Array.from(document.querySelectorAll(sel)); }
-function setProgress(el, pct){ el.style.width = (pct||0) + "%"; }
-function fmt(s){ return (s??"").toString(); }
+window.hideLoader = function () {
+  document.body.classList.remove("loading");
+};
 
-function renderNotifications(list, mountSel){
-  const mount = qs(mountSel);
-  if (!mount) return;
-  mount.innerHTML = list.map(n => `
-    <div class="card">
-      <div class="small">${new Date(n.created_at).toLocaleString()}</div>
-      <div><strong>${n.type.toUpperCase()}</strong>: ${fmt(n.message)}</div>
-    </div>
-  `).join("");
-}
+// Header nav rendering, based on window.userId / window.userRole
+window.updateNav = function () {
+  const area = document.getElementById("authArea");
+  if (!area) return;
+
+  const uid = window.userId;
+  const role = window.userRole || "student";
+
+  if (!uid) {
+    area.innerHTML = `<a class="btn" href="/login.html">Login</a>`;
+    return;
+  }
+
+  const adminLink = role === "admin" ? `<a class="btn ghost" href="/admin.html">Admin</a>` : "";
+  const instrLink = role === "instructor" ? `<a class="btn ghost" href="/instructor.html">Instructor</a>` : "";
+
+  area.innerHTML = `
+    <span class="small">Signed in as <strong>${uid}</strong> (${role})</span>
+    <a class="btn ghost" href="/dashboard.html">Dashboard</a>
+    ${adminLink}
+    ${instrLink}
+    <a class="btn ghost" href="/profile.html">Profile</a>
+    <button class="btn" type="button" onclick="logoutDemo()">Logout</button>
+  `;
+};
