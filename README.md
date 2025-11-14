@@ -24,27 +24,5 @@ npm run start
 # visit http://localhost:3000
 ```
 
-## Configure Clerk (required for real login/signup)
-Edit `public/js/auth.js`:
-- Replace `YOUR_CLERK_PUBLISHABLE_KEY` with your key.
-- Replace `your-domain.clerk.accounts` if needed (or keep the default loader).
-
-Protected pages check `window.Clerk`. For local demo without keys, toggle `const DEMO_MODE = true` in `public/js/auth.js` to bypass Clerk for exploration (not secure).
-
-## Email/SMS
-`Enrollment` creates a dev notification entry viewable on the Dashboard (and logs to server). Replace the `sendNotification()` function in `server.js` with Twilio/SendGrid in production.
-
-## Certificate Verification
-Each certificate has a unique ID + QR code. Shareable verify link:
-```
-/verify.html?certId=<ID>
-```
-This page checks against the backend `/api/certificates/:id`.
-
-## Admin Role
-The `admin.html` page shows simple controls for instructors/admins (create courses, approve grades). Assign your role once after login at `/signup.html` or via the dashboard role selector.
-
----
-
 © 2025
 "# Online-Course-Certification-System" 
