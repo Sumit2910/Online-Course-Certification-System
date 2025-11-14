@@ -6,89 +6,62 @@
   <title>Login</title>
   <link rel="stylesheet" href="/css/styles.css">
 </head>
+
 <body>
-  <header class="header">
-    <div class="header-left">
-      <a href="/index.html" class="brand-wrap">
-        <img src="/images/logo.png" alt="Certifyकरो Logo"
-             onerror="this.src='https://dummyimage.com/40x40/1b244d/ffffff&text=C'">
-        <span class="brand">Certifyकरो</span>
-      </a>
+<header class="header">
+  <a href="/index.html" class="brand-wrap">
+    <img src="/images/logo.png" alt="logo" onerror="this.src='https://dummyimage.com/40x40/1b244d/fff&text=C'">
+    <span class="brand">Certifyकरो</span>
+  </a>
+  <div id="authArea"></div>
+</header>
+
+<div class="container" style="max-width:420px;margin:auto;padding-top:40px;">
+  <h2>Sign In</h2>
+
+  <div class="card" style="padding:20px;">
+    <div class="field">
+      <label>Email</label>
+      <input id="email" class="input" placeholder="Enter your email">
     </div>
 
-    <button class="nav-toggle" aria-label="Toggle navigation">
-      <span></span><span></span><span></span>
-    </button>
-
-    <nav class="main-nav" id="mainNav">
-      <a href="/index.html">Home</a>
-      <a href="/catalog.html">Catalog</a>
-      <a href="/dashboard.html">Dashboard</a>
-      <a href="/certificate.html">Certificates</a>
-    </nav>
-
-    <div id="authArea" class="auth-area"></div>
-  </header>
-
-  <div class="container">
-    <div class="grid" style="grid-template-columns:1.1fr .9fr;align-items:stretch">
-      <!-- Left: brand/description -->
-      <div class="card" style="display:flex;flex-direction:column;justify-content:center;gap:14px">
-        <div class="kicker">Welcome back</div>
-        <h1 class="title">Sign in to continue</h1>
-        <p class="subtitle">Access the course catalog, track progress, submit assessments, and generate verifiable certificates.</p>
-        <div class="grid cards" style="grid-template-columns:repeat(2,1fr)">
-          <div class="card">
-            <h3>Admin access</h3>
-            <p class="small"><code>user@admin.com</code> → Admin dashboard</p>
-          </div>
-          <div class="card">
-            <h3>Instructor access</h3>
-            <p class="small"><code>user@instructor.com</code> → Instructor dashboard</p>
-          </div>
-        </div>
-        <img src="https://dummyimage.com/900x320/121936/5b8cff&text=Learning+Portal" style="width:100%;border-radius:18px;border:1px solid #1a2146">
-      </div>
-
-      <!-- Right: form -->
-      <div class="card">
-        <h3>Demo Sign In</h3>
-        <div class="field">
-          <label>Email</label>
-          <input class="input" id="email" placeholder="you@example.com">
-        </div>
-        <div class="field">
-          <label>Password</label>
-          <input class="input" id="password" type="password" placeholder="(any password for demo)">
-        </div>
-        <button class="btn" id="signInBtn" >Sign In</button>
-        <p class="small" style="margin-top:10px">Don’t have an account? <a href="/signup.html">Create one</a></p>
-      </div>
+    <div class="field" style="margin-top:16px;">
+      <label>Password</label>
+      <input id="password" class="input" type="password" placeholder="••••••">
     </div>
+
+    <button class="btn" id="loginBtn" style="margin-top:20px;">Sign In</button>
   </div>
 
-  <footer class="footer">© 2025 Online Course Certification • Prototype</footer>
-  <script src="/js/app.js"></script>
-  <script src="/js/auth.js"></script>
+  <p class="small" style="opacity:.8;margin-top:16px;">
+    Demo roles:<br>
+    <b>user@admin.com</b> → Admin <br>
+    <b>user@instructor.com</b> → Instructor <br>
+    Any other → Student
+  </p>
+</div>
 
-  <script>
-    // Attach login handlers
-    (function loginAttach(){
-      const email = document.getElementById('email');
-      const pass = document.getElementById('password');
-      const btn = document.getElementById('signInBtn');
-      function go(){
-        if(!email.value.trim()){ alert("Enter email"); email.focus(); return; }
-        loginDemo(email.value, pass.value);
-      }
-      if(btn) btn.addEventListener('click', go);
-      [email, pass].forEach(i => i && i.addEventListener('keypress', e => {
-        if(e.key === 'Enter'){ e.preventDefault(); go(); }
-      }));
-    })();
-  </script>
+<footer class="footer">© 2025 Online Course Certification • Prototype</footer>
 
+<!-- Load scripts IN CORRECT ORDER -->
 <script src="/js/app.js"></script>
 <script src="/js/auth.js"></script>
-<script src="/js/auth.js"></script>
+
+<script>
+document.getElementById("loginBtn").addEventListener("click", () => {
+  const email = document.getElementById("email").value.trim();
+  const pass  = document.getElementById("password").value.trim();
+
+  if (!email) return alert("Please enter your email.");
+  if (typeof loginDemo !== "function"){
+    console.error("loginDemo missing – auth.js did NOT load.");
+    alert("Internal error: login system unavailable.");
+    return;
+  }
+
+  loginDemo(email, pass);
+});
+</script>
+
 </body>
+</html>
