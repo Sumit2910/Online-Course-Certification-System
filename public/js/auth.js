@@ -8,10 +8,12 @@
 
 window.userId = null;
 window.userRole = "student";
+// Change this to your real Render URL once deployed
+const API_BASE = "https://your-app.onrender.com";  // TODO: put your Render URL here
 
 const API = {
   get: (url, opts = {}) =>
-    fetch(url, {
+    fetch(API_BASE + url, {
       ...opts,
       headers: {
         ...(opts.headers || {}),
@@ -20,7 +22,7 @@ const API = {
       }
     }).then(r => r.json()),
   post: (url, data = {}, opts = {}) =>
-    fetch(url, {
+    fetch(API_BASE + url, {
       method: "POST",
       body: JSON.stringify(data),
       headers: {
@@ -30,6 +32,7 @@ const API = {
       }
     }).then(r => r.json())
 };
+
 
 function roleFromEmail(email) {
   const e = String(email || "").trim().toLowerCase();
