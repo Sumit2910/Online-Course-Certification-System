@@ -30,9 +30,9 @@ app.get(["/", "/index.html", "/login.html", "/dashboard.html", "/catalog.html", 
 });
 
 // Show 404 for unknown API routes
-app.use("/api", (req, res) => {
-  res.status(404).json({ error: "API endpoint not found" });
-});
+// app.use("/api", (req, res) => {
+//   res.status(404).json({ error: "API endpoint not found" });
+// });
 
 
 // --- DB Setup ---
@@ -477,6 +477,30 @@ app.get("/api/admin/enrollments", (req, res) => {
 // Fallback to index
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
+});
+
+app.listen(PORT, () => {
+  console.log(`Server running at http://localhost:${PORT}`);
+});
+
+// --- Admin listings ---
+app.get("/api/admin/enrollments", (req, res) => {
+  db.all(
+    `SELECT e.user_id, e.course_id, e.created_at, c.title 
+     FROM enrollments e 
+     JOIN courses c ON e.course_id=c.id 
+     ORDER BY e.created_at DESC LIMIT 200`,
+    [],
+    (err, rows) => {
+      if (err) return res.status(500).json({ error: err.message });
+      res.json(rows);
+    }
+  );
+});
+
+// (OPTIONAL) Simple root endpoint just to see backend is alive
+app.get("/", (req, res) => {
+  res.json({ status: "ok", message: "Backend is running" });
 });
 
 app.listen(PORT, () => {
