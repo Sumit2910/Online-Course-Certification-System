@@ -47,8 +47,8 @@
     <div id="verifyMount" style="margin-top:16px"></div>
     <script>
       document.addEventListener("DOMContentLoaded", () => {
-        const id = new URLSearchParams(location.search).get("certId");
-        if (id) API.get("/api/certificates/" + id).then(res => {
+        const id = new URLSearchParams(location.search).get("certId")?.trim();
+        if (id) API.get("/certificates/" + id).then(res => {
           const mount = qs("#verifyMount");
           if (res && !res.error) {
             mount.innerHTML = `
