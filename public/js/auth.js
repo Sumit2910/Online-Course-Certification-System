@@ -12,7 +12,7 @@ window.userId = null;
 window.userRole = "student";
 
 // Backend API base (Render)
-const API_BASE = "https://online-course-certification-system.onrender.com";
+// const API_BASE = "https://online-course-certification-system.onrender.com";
 
 // Unified API wrapper
 window.API = {
