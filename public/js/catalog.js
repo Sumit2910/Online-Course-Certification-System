@@ -8,7 +8,7 @@ if (typeof API_BASE === "undefined") {
 async function loadCatalog(ev) {
   if (ev) ev.preventDefault();
 
-  const mount = qs("#catalog");
+  const mount = qs("#catalogList");
   if (!mount) return;
 
   const params = new URLSearchParams();
@@ -32,7 +32,7 @@ async function loadCatalog(ev) {
   if (q)          params.set("q", q);
 
   const query = params.toString();
-  const url = "api/courses" + (query ? "?" + query : "");
+  const url = "/courses" + (query ? "?" + query : "");
 
   console.log("Calling URL:", API_BASE + url);
 
