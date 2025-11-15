@@ -329,15 +329,46 @@ app.post("/api/certificates/custom", authUser, (req, res) => {
 
 // GET CERTIFICATE
 app.get("/api/certificates/:id", (req, res) => {
+  const certId = req.params.id;
+
+  // First check normal certificates
   db.get(
-    `SELECT * FROM certificates WHERE id=?`,
-    [req.params.id],
+    `SELECT id, user_id, course_id, issued_at FROM certificates WHERE id=?`,
+    [certId],
     (err, row) => {
-      if (!row) return res.status(404).json({ error: "Not found" });
-      res.json(row);
+      if (err) return res.status(500).json({ error: err.message });
+
+      if (row) {
+        // Found in standard certificates table
+        return res.json({
+          type: "standard",
+          ...row
+        });
+      }
+
+      // If not found, check custom certificates
+      db.get(
+        `SELECT id, user_id, name, title, issuer, design, issued_at
+         FROM certificates_custom WHERE id=?`,
+        [certId],
+        (err2, row2) => {
+          if (err2) return res.status(500).json({ error: err2.message });
+
+          if (row2) {
+            return res.json({
+              type: "custom",
+              ...row2
+            });
+          }
+
+          // Certificate does not exist in either table
+          return res.status(404).json({ error: "Certificate not found" });
+        }
+      );
     }
   );
 });
+
 
 // ---- ROOT ENDPOINT ----
 app.get("/", (req, res) => {
