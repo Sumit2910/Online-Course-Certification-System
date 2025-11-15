@@ -187,7 +187,7 @@ if (bar) bar.style.width = backendPercent + "%";
 
     // Render UI
     renderModules(modules, completed, course.id);
-    updateProgressBar(modules.length, completed.size);
+    // updateProgressBar(modules.length, completed.size);
   } catch (e) {
     if (window.hideLoader) window.hideLoader();
     console.error(e);
