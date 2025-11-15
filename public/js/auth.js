@@ -1,44 +1,41 @@
 
-// ---------------------------------------
-// /public/js/auth.js  (FINAL, FIXED)
-// ---------------------------------------
-
-// Demo login accounts:
-//   user@admin.com        → admin
-//   user@instructor.com   → instructor
-//   anything else         → student
-
+// Unified session variables
 window.userId = null;
 window.userRole = "student";
 
-// Backend API base (Render)
-// const API_BASE = "https://online-course-certification-system.onrender.com";
-
-// Unified API wrapper
+// ======================================================
+// API WRAPPER — uses ONE consistent session source
+// ======================================================
 window.API = {
   get: (url, opts = {}) =>
     fetch(API_BASE + url, {
       ...opts,
+      method: "GET",
+      credentials: "include",
       headers: {
         ...(opts.headers || {}),
         "Content-Type": "application/json",
-        "x-user-id": window.userId || ""
+        "x-user-id": localStorage.getItem("user_id") || ""
       }
     }).then(r => r.json()),
 
   post: (url, data = {}, opts = {}) =>
     fetch(API_BASE + url, {
+      ...opts,
       method: "POST",
+      credentials: "include",
       body: JSON.stringify(data),
       headers: {
         ...(opts.headers || {}),
         "Content-Type": "application/json",
-        "x-user-id": window.userId || ""
+        "x-user-id": localStorage.getItem("user_id") || ""
       }
     }).then(r => r.json())
 };
 
-// Determine role based on email
+// ======================================================
+// ROLE DETERMINATION (demo)
+// ======================================================
 function roleFromEmail(email) {
   const e = String(email || "").trim().toLowerCase();
   if (e === "user@admin.com") return "admin";
@@ -46,16 +43,16 @@ function roleFromEmail(email) {
   return "student";
 }
 
-// Role-specific default home pages
+// Redirect based on role
 function defaultHome(role) {
   if (role === "admin") return "/admin.html";
   if (role === "instructor") return "/instructor.html";
   return "/dashboard.html";
 }
 
-// ------------------------------
-// LOGIN FUNCTION
-// ------------------------------
+// ======================================================
+// LOGIN
+// ======================================================
 window.loginDemo = async function (email, password) {
   const uid = String(email || "").trim().toLowerCase();
 
@@ -63,15 +60,15 @@ window.loginDemo = async function (email, password) {
 
   const role = roleFromEmail(uid);
 
-  // Apply session
+  // Save session to localStorage (UNIFIED)
+  localStorage.setItem("user_id", uid);
+  localStorage.setItem("user_role", role);
+
+  // Update window variables
   window.userId = uid;
   window.userRole = role;
 
-  // Save in localStorage
-  localStorage.setItem("demo_user_id", uid);
-  localStorage.setItem("demo_user_role", role);
-
-  // Try to register/update role in backend
+  // Register/update backend role
   try {
     await API.post("/users/role", { role });
   } catch (err) {
@@ -80,13 +77,12 @@ window.loginDemo = async function (email, password) {
 
   if (typeof updateNav === "function") updateNav();
 
-  // Handle intended redirect
+  // Handle redirect
   let redirectURL = localStorage.getItem("redirect_after_login");
-
   if (redirectURL) {
     localStorage.removeItem("redirect_after_login");
 
-    // Access-check
+    // Protect restricted pages
     if (redirectURL.includes("/admin.html") && role !== "admin")
       redirectURL = defaultHome(role);
 
@@ -98,17 +94,17 @@ window.loginDemo = async function (email, password) {
     return;
   }
 
-  // Default post-login
+  // Default navigation
   if (window.showLoader) window.showLoader();
   location.href = defaultHome(role);
 };
 
-// ------------------------------
+// ======================================================
 // LOGOUT
-// ------------------------------
+// ======================================================
 window.logoutDemo = function () {
-  localStorage.removeItem("demo_user_id");
-  localStorage.removeItem("demo_user_role");
+  localStorage.removeItem("user_id");
+  localStorage.removeItem("user_role");
 
   window.userId = null;
   window.userRole = "student";
@@ -119,11 +115,11 @@ window.logoutDemo = function () {
   location.href = "/index.html";
 };
 
-// ------------------------------
-// SESSION RESTORE
-// ------------------------------
+// ======================================================
+// SESSION RESTORE (runs on every page automatically)
+// ======================================================
 function initAuth() {
-  // Pages that must ALWAYS behave like logged-out
+  // When page explicitly disables session
   if (window.NO_SESSION_ON_THIS_PAGE) {
     window.userId = null;
     window.userRole = "student";
@@ -131,8 +127,8 @@ function initAuth() {
     return;
   }
 
-  const uid = localStorage.getItem("demo_user_id");
-  const role = localStorage.getItem("demo_user_role");
+  const uid = localStorage.getItem("user_id");
+  const role = localStorage.getItem("user_role");
 
   if (uid) {
     window.userId = uid;
