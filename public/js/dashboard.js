@@ -3,7 +3,7 @@
 
 async function loadDashboard() {
   try {
-    const notes = await API.get("/api/notifications");
+    const notes = await API.get("/notifications");
     if (notes && typeof renderNotifications === "function") {
       renderNotifications(notes, "#notifMount");
     }
@@ -18,7 +18,7 @@ async function loadDashboard() {
 async function saveRole() {
   const role = qs("#role").value;
   try {
-    await API.post("/api/users/role", { role });
+    await API.post("/users/role", { role });
     alert("Role updated.");
   } catch (err) {
     console.error(err);

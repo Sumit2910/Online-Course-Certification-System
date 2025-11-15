@@ -54,7 +54,7 @@ async function saveAndIssue(){
     issuer: data.issuer,
     design: data.design
   };
-  const res = await API.post("/api/certificates/custom", payload);
+  const res = await API.post("/certificates/custom", payload);
   if (res && res.ok){
     qs("#cid").innerText = res.certId;
     new QRCode(document.getElementById("qrcode"), {

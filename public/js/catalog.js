@@ -8,7 +8,7 @@ if (typeof API_BASE === "undefined") {
 async function loadCatalog(ev) {
   if (ev) ev.preventDefault();
 
-  const mount = qs("#catalogList");
+  const mount = qs("#catalog");
   if (!mount) return;
 
   const params = new URLSearchParams();

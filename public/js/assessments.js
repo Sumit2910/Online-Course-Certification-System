@@ -5,7 +5,7 @@ async function submitQuiz(){
     q1: (qs("input[name=q1]:checked")||{}).value || null,
     q2: (qs("input[name=q2]:checked")||{}).value || null,
   };
-  const res = await API.post("/api/assessments/submit", { course_id: Number(id), answers });
+  const res = await API.post("/assessments/submit", { course_id: Number(id), answers });
   renderResult(res);
 }
 
@@ -17,7 +17,7 @@ async function submitFile(){
   fd.append("file", f);
   fd.append("course_id", Number(id));
 
-  const r = await fetch("/api/assessments/submit", {
+  const r = await fetch("/assessments/submit", {
     method:"POST",
     headers: {"x-user-id": window.userId || ""},
     body: fd
@@ -28,7 +28,7 @@ async function submitFile(){
 
 async function checkGrade(){
   const id = new URLSearchParams(location.search).get("id");
-  const res = await API.get("/api/grades/" + id);
+  const res = await API.get("/grades/" + id);
   renderResult(res);
 }
 

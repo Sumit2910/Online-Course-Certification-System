@@ -73,7 +73,7 @@ window.loginDemo = async function (email, password) {
 
   // Try to register/update role in backend
   try {
-    await API.post("/api/users/role", { role });
+    await API.post("/users/role", { role });
   } catch (err) {
     console.warn("Failed to sync user role:", err);
   }

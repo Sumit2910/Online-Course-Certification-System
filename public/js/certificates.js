@@ -26,7 +26,7 @@ async function tryGenerate(){
     qs("#verifyLink").href = "/verify.html?certId=" + res.certId;
     qs("#certCard").style.display = "block";
 
-    const course = await API.get("/api/courses/" + id);
+    const course = await API.get("/courses" + id);
     buildCourseCertificateCanvas(res.certId, course.title, window.userId, res.issued_at);
   } catch (err) {
     if (window.hideLoader) window.hideLoader();
@@ -40,7 +40,7 @@ async function verify(){
   const mount = qs("#verifyMount");
   try {
     if (window.showLoader) window.showLoader();
-    const res = await API.get("/api/certificates/" + id);
+    const res = await API.get("/certificates" + id);
     if (window.hideLoader) window.hideLoader();
 
     if (!res || res.error) {

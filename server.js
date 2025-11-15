@@ -15,7 +15,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // FIXED CORS (Works with credentials)
 const cors = require("cors");
 app.use(cors({
-    origin: "https://certifykaro-occs.netlify.app/", 
+    origin: "https://certifykaro-occs.netlify.app", 
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization", "x-user-id"]
@@ -29,7 +29,7 @@ app.use((req, res, next) => {
 
 // Preflight support
 app.options("*", cors({
-    origin: "https://certifykaro-occs.netlify.app/",
+    origin: "https://certifykaro-occs.netlify.app",
     credentials: true
 }));
 
