@@ -1,6 +1,10 @@
 
 // /public/js/catalog.js - patched
 
+if (typeof API_BASE === "undefined") {
+    console.error("API_BASE not loaded!");
+}
+
 async function loadCatalog(ev) {
   if (ev) ev.preventDefault();
 
@@ -28,7 +32,7 @@ async function loadCatalog(ev) {
   if (q)          params.set("q", q);
 
   const query = params.toString();
-  const url = "/api/courses" + (query ? "?" + query : "");
+  const url = "/courses/" + (query ? "?" + query : "");
 
   console.log("Calling URL:", API_BASE + url);
 

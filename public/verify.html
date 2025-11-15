@@ -30,6 +30,8 @@
       <a href="/certificate.html">Certificates</a>
     </nav>
 
+
+
     <div id="authArea" class="auth-area"></div>
   </header>
   <div class="container">
@@ -69,7 +71,15 @@
   <footer class="footer">© 2025 Online Course Certification • Prototype</footer>
   <script>window.NO_SESSION_ON_THIS_PAGE = true;</script>
   <script src="/js/config.js"></script>
+  <script src="/js/api.js"></script>
   <script src="/js/app.js"></script>
-  <script src="/js/auth.js"></script>
   <script src="/js/certificates.js"></script>
+  <script src="/js/auth.js"></script>
+      <script>
+    document.addEventListener("DOMContentLoaded", () => {
+        if (typeof checkAuth === "function") {
+            checkAuth();
+        }
+    });
+</script>
 </body>

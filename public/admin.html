@@ -19,6 +19,8 @@
       <a href="/dashboard.html">Dashboard</a>
       <a href="/admin.html">Admin</a>
     </nav>
+
+    
     <div id="authArea" style="margin-left:16px"></div>
   </header>
 
@@ -88,9 +90,19 @@
     window.REQUIRED_ROLE = "admin";
   </script>
   <script src="/js/config.js"></script>
+  <script src="/js/api.js"></script>
   <script src="/js/guard.js"></script>
   <script src="/js/app.js"></script>
   <script src="/js/auth.js"></script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+        if (typeof checkAuth === "function") {
+            checkAuth();
+        }
+    });
+</script>
+
 
 </body>
 
