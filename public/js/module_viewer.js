@@ -43,7 +43,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     try {
       if (window.showLoader) window.showLoader();
 
-      const res = await API.post("/module/complete/", {
+      const res = await API.post("/module/complete", {
         course_id: Number(courseId),
         module_id: Number(moduleId)
       });
