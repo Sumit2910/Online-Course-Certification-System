@@ -12,17 +12,26 @@ const PORT = process.env.PORT || 3000;
 app.use(bodyParser.json({ limit: "10mb" }));
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// CORS
+// FIXED CORS (Works with credentials)
+const cors = require("cors");
+app.use(cors({
+    origin: "https://certifykaro.netlify.app", 
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization", "x-user-id"]
+}));
+
+// Allow credentials server-wide
 app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept, Authorization, x-user-id"
-  );
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-  if (req.method === "OPTIONS") return res.sendStatus(200);
-  next();
+    res.header("Access-Control-Allow-Credentials", "true");
+    next();
 });
+
+// Preflight support
+app.options("*", cors({
+    origin: "https://certifykaro.netlify.app",
+    credentials: true
+}));
 
 // ---- DATABASE SETUP ----
 const dbFile = path.join(__dirname, "occ.db");
