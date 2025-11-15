@@ -130,7 +130,7 @@ async function loadCoursePage() {
 
   try {
     if (window.showLoader) window.showLoader();
-    const course = await API.get("/courses" + id);
+    const course = await API.get("/courses/" + id);
     if (window.hideLoader) window.hideLoader();
 
     // Fill header info
@@ -155,7 +155,7 @@ async function loadCoursePage() {
     // Try to fetch progress; fail gracefully if API not implemented
     let completed = new Set();
     try {
-      const prog = await API.get("/progress" + course.id);
+      const prog = await API.get("/progress/" + course.id);
       if (prog && Array.isArray(prog.progress)) {
         completed = new Set(prog.progress.map((p) => p.module_id));
       }
