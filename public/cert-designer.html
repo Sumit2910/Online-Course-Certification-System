@@ -1,11 +1,13 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Custom Certificate Designer</title>
   <link rel="stylesheet" href="/css/styles.css">
 </head>
+
 <body>
   <header class="header">
     <img src="/images/logo.png" alt="Logo" onerror="this.src='https://dummyimage.com/80x80/1b244d/ffffff&text=LOGO'">
@@ -59,7 +61,8 @@
         <div id="issued" style="display:none;margin-top:16px">
           <div class="card">
             <h3>Certificate Issued</h3>
-            <div id="certCanvasCustom" style="margin:12px auto;padding:30px;max-width:900px;background:white;color:#111;border-radius:12px;border:1px solid #ddd">
+            <div id="certCanvasCustom"
+              style="margin:12px auto;padding:30px;max-width:900px;background:white;color:#111;border-radius:12px;border:1px solid #ddd">
               <div id="certCanvasCustomInner"></div>
               <div style="display:flex;justify-content:space-between;align-items:center;margin-top:16px">
                 <div style="font-size:12px">Certificate ID: <span id="cidCustomInline"></span></div>
@@ -68,7 +71,8 @@
             </div>
             <p><strong>ID:</strong> <span id="cid"></span></p>
             <div id="qrcode"></div>
-            <a class="btn" id="verifyLink" href="#">Open Verification Page</a> <button class="btn secondary" onclick="downloadCustomPNG()">Download PNG</button>
+            <a class="btn" id="verifyLink" href="#">Open Verification Page</a> <button class="btn secondary"
+              onclick="downloadCustomPNG()">Download PNG</button>
           </div>
         </div>
       </div>
@@ -76,13 +80,15 @@
   </div>
   <footer class="footer">© 2025 Online Course Certification • Prototype</footer>
   <script>
-  window.REQUIRE_AUTH = true;
-</script>
-<script src="/js/guard.js"></script>
+    window.REQUIRE_AUTH = true;
+  </script>
+  <script src="/js/config.js"></script>
+  <script src="/js/guard.js"></script>
   <script src="/js/app.js"></script>
   <script src="/js/auth.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script src="/js/designer.js"></script>
 </body>
+
 </html>

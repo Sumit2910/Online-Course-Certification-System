@@ -1,17 +1,19 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Dashboard</title>
   <link rel="stylesheet" href="/css/styles.css">
 </head>
+
 <body>
   <header class="header">
     <div class="header-left">
       <a href="/index.html" class="brand-wrap">
         <img src="/images/logo.png" alt="Certifyकरो Logo"
-             onerror="this.src='https://dummyimage.com/40x40/1b244d/ffffff&text=C'">
+          onerror="this.src='https://dummyimage.com/40x40/1b244d/ffffff&text=C'">
         <span class="brand">Certifyकरो</span>
       </a>
     </div>
@@ -32,45 +34,42 @@
   <div class="container">
 
     <!-- My Courses Panel -->
-<div class="card" style="margin-bottom:20px">
-  <h2>My Courses</h2>
-  <p class="small" style="opacity:.7;margin-bottom:12px;">
-    Courses you have enrolled in
-  </p>
+    <div class="card" style="margin-bottom:20px">
+      <h2>My Courses</h2>
+      <p class="small" style="opacity:.7;margin-bottom:12px;">
+        Courses you have enrolled in
+      </p>
 
-  <div id="myCourses"></div>
-</div>
+      <div id="myCourses"></div>
+    </div>
 
-    
-<h2>Dashboard</h2>
-<div class="grid" style="grid-template-columns:1fr .8fr">
-  <div>
-    <div class="card">
-      <h3>Notifications</h3>
-      <div id="notifMount" class="grid"></div>
+
+    <h2>Dashboard</h2>
+    <div class="grid" style="grid-template-columns:1fr .8fr">
+      <div>
+        <div class="card">
+          <h3>Notifications</h3>
+          <div id="notifMount" class="grid"></div>
+        </div>
+      </div>
+      <div>
+
+      </div>
+      <div class="card">
+        <h3>Quick Links</h3>
+        <a class="btn" href="/catalog.html">Browse Catalog</a>
+      </div>
     </div>
   </div>
-  <div>
-    
-    </div>
-    <div class="card">
-      <h3>Quick Links</h3>
-      <a class="btn" href="/catalog.html">Browse Catalog</a>
-    </div>
-  </div>
-</div>
 
   </div>
   <footer class="footer">© 2025 Online Course Certification • Prototype</footer>
   <script>
-  window.REQUIRE_AUTH = true;
-</script>
-<script src="/js/guard.js"></script>
+    window.REQUIRE_AUTH = true;
+  </script>
+  <script src="/js/config.js"></script>
+  <script src="/js/guard.js"></script>
   <script src="/js/app.js"></script>
   <script src="/js/auth.js"></script>
   <script src="/js/dashboard.js"></script>
-
-<script src="/js/app.js"></script>
-<script src="/js/auth.js"></script>
-<script src="/js/dashboard.js"></script>
 </body>

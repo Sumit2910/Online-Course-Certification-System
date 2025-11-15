@@ -1,11 +1,13 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Profile</title>
   <link rel="stylesheet" href="/css/styles.css">
 </head>
+
 <body>
   <header class="header">
     <img src="/images/logo.png" alt="Logo" onerror="this.src='https://dummyimage.com/80x80/1b244d/ffffff&text=LOGO'">
@@ -24,8 +26,12 @@
     <h2>Your Profile</h2>
     <div class="grid" style="grid-template-columns:1fr">
       <div class="card">
-        <div class="field"><label>User ID</label><div class="small" id="p_uid">-</div></div>
-        <div class="field"><label>Role</label><div class="small" id="p_role">-</div></div>
+        <div class="field"><label>User ID</label>
+          <div class="small" id="p_uid">-</div>
+        </div>
+        <div class="field"><label>Role</label>
+          <div class="small" id="p_role">-</div>
+        </div>
         <button class="btn" onclick="logoutDemo()">Logout</button>
       </div>
     </div>
@@ -33,14 +39,16 @@
 
   <footer class="footer">© 2025 Online Course Certification • Prototype</footer>
   <script>window.REQUIRE_AUTH = true;</script>
+  <script src="/js/config.js"></script>
   <script src="/js/guard.js"></script>
   <script src="/js/app.js"></script>
   <script src="/js/auth.js"></script>
   <script>
-    document.addEventListener('DOMContentLoaded', () => { 
+    document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('p_uid').innerText = window.userId || '-';
       document.getElementById('p_role').innerText = window.userRole || '-';
     });
   </script>
 </body>
+
 </html>

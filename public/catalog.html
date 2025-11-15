@@ -1,17 +1,19 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Catalog</title>
   <link rel="stylesheet" href="/css/styles.css">
 </head>
+
 <body>
   <header class="header">
     <div class="header-left">
       <a href="/index.html" class="brand-wrap">
         <img src="/images/logo.png" alt="Certifyकरो Logo"
-             onerror="this.src='https://dummyimage.com/40x40/1b244d/ffffff&text=C'">
+          onerror="this.src='https://dummyimage.com/40x40/1b244d/ffffff&text=C'">
         <span class="brand">Certifyकरो</span>
       </a>
     </div>
@@ -30,22 +32,24 @@
     <div id="authArea" class="auth-area"></div>
   </header>
   <div class="container">
-    
-<h2>Course Catalog</h2>
-<div class="card">
-  <div class="grid" style="grid-template-columns:repeat(6,1fr)">
-    <div class="field"><label>Category</label><input id="fCategory" class="input" placeholder="Programming, Web..."></div>
-    <div class="field"><label>Instructor</label><input id="fInstructor" class="input" placeholder="Kapoor..."></div>
-    <div class="field"><label>Min Duration (hrs)</label><input id="fMin" class="input" type="number" min="0"></div>
-    <div class="field"><label>Max Duration (hrs)</label><input id="fMax" class="input" type="number" min="0"></div>
-    <div class="field"><label>Search</label><input id="fQ" class="input" placeholder="Keywords"></div>
-    <div class="field"><label>&nbsp;</label><button class="btn" id="searchBtn">Apply</button></div>
-  </div>
-</div>
-<div class="grid cards" id="catalog" style="margin-top:16px"></div>
+
+    <h2>Course Catalog</h2>
+    <div class="card">
+      <div class="grid" style="grid-template-columns:repeat(6,1fr)">
+        <div class="field"><label>Category</label><input id="fCategory" class="input" placeholder="Programming, Web...">
+        </div>
+        <div class="field"><label>Instructor</label><input id="fInstructor" class="input" placeholder="Kapoor..."></div>
+        <div class="field"><label>Min Duration (hrs)</label><input id="fMin" class="input" type="number" min="0"></div>
+        <div class="field"><label>Max Duration (hrs)</label><input id="fMax" class="input" type="number" min="0"></div>
+        <div class="field"><label>Search</label><input id="fQ" class="input" placeholder="Keywords"></div>
+        <div class="field"><label>&nbsp;</label><button class="btn" id="searchBtn">Apply</button></div>
+      </div>
+    </div>
+    <div class="grid cards" id="catalog" style="margin-top:16px"></div>
 
   </div>
   <footer class="footer">© 2025 Online Course Certification • Prototype</footer>
+  <script src="/js/config.js"></script>
   <script src="/js/app.js"></script>
   <script src="/js/auth.js"></script>
   <script src="/js/catalog.js"></script>
