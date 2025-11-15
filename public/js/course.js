@@ -152,23 +152,34 @@ async function loadCoursePage() {
       modules = FALLBACK_MODULES[String(course.id)] || FALLBACK_MODULES["_default"];
     }
 
-   // Try to fetch progress from the backend
-  let completed = new Set();
-  try {
-    const mine = await API.get("/my/courses");
-    const row = mine.find(c => Number(c.id) === Number(course.id));
+// =========================================
+// LOAD PROGRESS FROM BACKEND
+// =========================================
+let completed = new Set();
+let backendPercent = 0;
 
-    if (row && row.completed_modules !== undefined) {
-      const doneCount = Number(row.completed_modules || 0);
+try {
+  const mine = await API.get("/my/courses");
+  const row = mine.find(c => Number(c.id) === Number(course.id));
 
-      // Completed modules are simply module 1 to doneCount
-      completed = new Set(
-        Array.from({ length: doneCount }, (_, i) => i + 1)
-      );
-    }
-  } catch (err) {
-    completed = new Set();
+  if (row) {
+    backendPercent = Number(row.percent || 0);
+
+    const doneCount = Number(row.completed_modules || 0);
+    completed = new Set(
+      Array.from({ length: doneCount }, (_, i) => i + 1)
+    );
   }
+} catch (err) {
+  console.warn("Could not fetch backend progress:", err);
+}
+
+// Update progress bar
+const label = document.getElementById("pLabel");
+const bar = document.querySelector(".progress div");
+if (label) label.textContent = backendPercent + "%";
+if (bar) bar.style.width = backendPercent + "%";
+
 
 
     // Save modules for module viewer
