@@ -32,7 +32,7 @@ async function loadCatalog(ev) {
   if (q)          params.set("q", q);
 
   const query = params.toString();
-  const url = "/courses/" + (query ? "?" + query : "");
+  const url = "api/courses" + (query ? "?" + query : "");
 
   console.log("Calling URL:", API_BASE + url);
 
