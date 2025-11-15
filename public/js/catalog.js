@@ -90,7 +90,7 @@ async function enroll(course_id) {
 
   try {
     if (window.showLoader) window.showLoader();
-    const res = await API.post("/api/enroll", { course_id });
+    const res = await API.post("/enroll", { course_id });
     if (window.hideLoader) window.hideLoader();
 
     if (res && res.ok) {

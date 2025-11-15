@@ -32,7 +32,7 @@ async function loadMyCourses() {
 
   try {
     if (window.showLoader) window.showLoader();
-    const data = await API.get("/api/my/courses");
+    const data = await API.get("/my/courses");
     if (window.hideLoader) window.hideLoader();
 
     if (!data || !data.length) {

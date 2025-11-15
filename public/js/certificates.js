@@ -15,7 +15,7 @@ async function tryGenerate(){
 
   try {
     if (window.showLoader) window.showLoader();
-    const res = await API.post("/api/certificates/generate", { course_id: Number(id) });
+    const res = await API.post("/certificates/generate", { course_id: Number(id) });
     if (window.hideLoader) window.hideLoader();
 
     if (res.error) {
