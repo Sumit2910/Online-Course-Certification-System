@@ -152,17 +152,24 @@ async function loadCoursePage() {
       modules = FALLBACK_MODULES[String(course.id)] || FALLBACK_MODULES["_default"];
     }
 
-    // Try to fetch progress; fail gracefully if API not implemented
-    let completed = new Set();
-    try {
-      const prog = await API.get("/progress/" + course.id);
-      if (prog && Array.isArray(prog.progress)) {
-        completed = new Set(prog.progress.map((p) => p.module_id));
-      }
-    } catch (err) {
-      // No progress API / error → treat as no modules completed
-      completed = new Set();
+   // Try to fetch progress from the backend
+  let completed = new Set();
+  try {
+    const mine = await API.get("/my/courses");
+    const row = mine.find(c => Number(c.id) === Number(course.id));
+
+    if (row && row.completed_modules !== undefined) {
+      const doneCount = Number(row.completed_modules || 0);
+
+      // Completed modules are simply module 1 to doneCount
+      completed = new Set(
+        Array.from({ length: doneCount }, (_, i) => i + 1)
+      );
     }
+  } catch (err) {
+    completed = new Set();
+  }
+
 
     // Save modules for module viewer
     localStorage.setItem("lastModules", JSON.stringify(modules));

@@ -125,9 +125,9 @@ db.serialize(() => {
          VALUES (?,?,?,?,?,?)`
       );
       [
-        ["Intro to Java", "Programming", "Dr. Kapoor", 20, "Java basics to OOP.", 3],
-        ["Data Structures", "CS Core", "Prof. Roy", 30, "Stacks, queues, trees.", 3],
-        ["Web Dev Fundamentals", "Web", "A. Sen", 25, "HTML, CSS, JS.", 3],
+        ["Intro to Java", "Programming", "Dr. Kapoor", 20, "Java basics to OOP.", 4],
+        ["Data Structures", "CS Core", "Prof. Roy", 30, "Stacks, queues, trees.", 4],
+        ["Web Dev Fundamentals", "Web", "A. Sen", 25, "HTML, CSS, JS.", 4],
         ["AI for Beginners", "AI/ML", "Dr. Nandi", 15, "Foundations of AI.", 3]
       ].forEach(c => stmt.run(c));
       stmt.finalize();
