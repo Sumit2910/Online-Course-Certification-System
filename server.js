@@ -304,6 +304,29 @@ app.post("/api/certificates/generate", authUser, (req, res) => {
   );
 });
 
+// CUSTOM CERTIFICATE (manual design/save)
+app.post("/api/certificates/custom", authUser, (req, res) => {
+  const { name, title, issuer, design } = req.body;
+
+  if (!name || !title || !issuer || !design) {
+    return res.status(400).json({ error: "Missing required fields" });
+  }
+
+  const id = uuidv4();
+  const now = new Date().toISOString();
+
+  db.run(
+    `INSERT INTO certificates_custom (id, user_id, name, title, issuer, design, issued_at)
+     VALUES (?,?,?,?,?,?,?)`,
+    [id, req.userId, name, title, issuer, design, now],
+    err => {
+      if (err) return res.status(500).json({ error: err.message });
+      res.json({ ok: true, certId: id, issued_at: now });
+    }
+  );
+});
+
+
 // GET CERTIFICATE
 app.get("/api/certificates/:id", (req, res) => {
   db.get(
