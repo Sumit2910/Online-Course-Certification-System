@@ -84,6 +84,8 @@ async function loadMyCourses() {
   }
 }
 
+//this comment line was used as dummy to help redeploy 
+
 document.addEventListener("DOMContentLoaded", async () => {
   await loadDashboard();
   await loadMyCourses();
