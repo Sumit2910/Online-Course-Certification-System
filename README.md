@@ -37,6 +37,8 @@ npm start         # plain node
 Visit http://localhost:3000 — the backend now serves the frontend directly,
 so there's nothing else to run.
 
+or visit *https://certifykaro.onrender.com* to get a live experience
+
 **Demo logins** (use these emails on the login page, any password):
 - `user@admin.com` — admin dashboard, course creation, grade release
 - `user@instructor.com` — instructor dashboard
