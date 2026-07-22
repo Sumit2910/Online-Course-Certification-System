@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Verify Certificate</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+
+<body>
+  <script>window.NO_SESSION_ON_THIS_PAGE = true;</script>
+  <header class="header">
+    <div class="header-left">
+      <a href="/index.html" class="brand-wrap">
+        <img src="/images/logo.png" alt="Certifyकरो Logo"
+          onerror="this.src='https://dummyimage.com/40x40/1b244d/ffffff&text=C'">
+        <span class="brand">Certifyकरो</span>
+      </a>
+    </div>
+
+    <button class="nav-toggle" aria-label="Toggle navigation">
+      <span></span><span></span><span></span>
+    </button>
+
+    <nav class="main-nav" id="mainNav">
+      <a href="/index.html">Home</a>
+      <a href="/catalog.html">Catalog</a>
+      <a href="/dashboard.html">Dashboard</a>
+      <a href="/certificate.html">Certificates</a>
+    </nav>
+
+
+
+    <div id="authArea" class="auth-area"></div>
+  </header>
+  <div class="container">
+
+    <h2>Verify Certificate</h2>
+    <div class="card">
+      <div class="field">
+        <label>Certificate ID</label>
+        <input class="input" id="cid" placeholder="Paste certificate ID">
+      </div>
+      <button class="btn" onclick="location.href='/verify.html?certId='+qs('#cid').value">Verify</button>
+    </div>
+    <div id="verifyMount" style="margin-top:16px"></div>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const id = new URLSearchParams(location.search).get("certId")?.trim();
+        if (id) API.get("/certificates/" + id).then(res => {
+          const mount = qs("#verifyMount");
+          if (res && !res.error) {
+            mount.innerHTML = `
+          <div class="card">
+            <h3>Certificate Valid ✅</h3>
+            <p><strong>ID:</strong> ${res.id}</p>
+            <p><strong>Title:</strong> ${res.course || res.title || "-"}</p>
+            <p><strong>Recipient:</strong> ${res.name || res.user_id}</p>
+            <p><strong>Issuer:</strong> ${res.issuer || "-"}</p>
+            <p><strong>Issued:</strong> ${new Date(res.issued_at).toLocaleString()}</p>
+          </div>`;
+          } else {
+            mount.innerHTML = `<div class="card"><h3>Invalid ❌</h3><p>${res.error || "Not found"}</p></div>`;
+          }
+        });
+      });
+    </script>
+
+  </div>
+  <footer class="footer">© 2025 Online Course Certification • Prototype</footer>
+  <script>window.NO_SESSION_ON_THIS_PAGE = true;</script>
+  <script src="/js/config.js"></script>
+  <script src="/js/api.js"></script>
+  <script src="/js/app.js"></script>
+  <script src="/js/certificates.js"></script>
+  <script src="/js/auth.js"></script>
+      <script>
+    document.addEventListener("DOMContentLoaded", () => {
+        if (typeof checkAuth === "function") {
+            checkAuth();
+        }
+    });
+</script>
+</body>
